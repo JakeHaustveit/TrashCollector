@@ -4,8 +4,7 @@ from django.shortcuts import render
 from django.apps import apps
 from datetime import date
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
-
+from django.core.exceptions import ObjectDoesNotExist
 from .models import Employee
 
 
@@ -13,16 +12,32 @@ from .models import Employee
 
 # TODO: Create a function for each path created in employees/urls.py. Each will need a template as well.
 
-
+@login_required
 def index(request):
-    # This line will get the Customer model from the other app, it can now be used to query the db for Customers
     Customer = apps.get_model('customers.Customer')
-    return render(request, 'employees/index.html')
+    logged_in_user = request.user
+    try:
+        # This line will return the customer record of the logged-in user if one exists
+        logged_in_employee = Employee.objects.get(user=logged_in_user)
+
+        today = date.today()
+        
+        context = {
+            'logged_in_employee': logged_in_employee,
+            'today': today
+        }
+        return render(request, 'employees/index.html', context)
+    except ObjectDoesNotExist:
+        return HttpResponseRedirect(reverse('employees:create'))
+    # This line will get the Customer model from the other app, it can now be used to query the db for Customers
+    
+    
+    # return render(request, 'employees/index.html')
 
 
 
 @login_required
-def register(request):
+def create(request):
     logged_in_user = request.user
     if request.method== "POST":
         name_from_form = request.POST.get('name')
@@ -32,7 +47,7 @@ def register(request):
         new_empyloyee.save()
         return HttpResponseRedirect(reverse('employees:index'))
     else:
-        return render(request, 'employees/register.html')
+        return render(request, 'employees/create.html')
 
 
 
@@ -50,7 +65,7 @@ def edit_profile(request):
         logged_in_employee.address = address_from_form
         logged_in_employee.zip_code = zip_from_form        
         logged_in_employee.save()
-        return HttpResponseRedirect(reverse('epmloyees:index'))
+        return HttpResponseRedirect(reverse('employees:index'))
     else:
         context = {
             'logged_in_employee': logged_in_employee
