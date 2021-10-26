@@ -11,18 +11,31 @@
     <br />
     <br />
     <h3>{{ today }}</h3>
+    Customers in my Zipcode    
+
+    {% for customer in customer_matching_zip_code %}
+     <h3> {{customer.name}} </h3>
+
+    {% endfor %} 
+
+
     Scheduled Weekly  Pickups: 
+    {% for customer in customer_weekly_pickup %}
+     <h3> {{customer.name}} </h3>
 
-    {% for customer in all_customers %}
-    <h3>{{ customer.name }}</h3> <br>
-
-    {% endfor %}
+    {% endfor %}  
     
-    {{ logged_in_employee_zip_code }}
+    
     <br />
     <br />
+    
     One-time Pickup:
     <br />
+    {% for customer in customer_one_time_pickup %}
+     <h3> {{customer.name}} </h3>
+
+    {% endfor %} 
+
     <br />
     Active Accounts:
     <br />
