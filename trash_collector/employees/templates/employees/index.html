@@ -10,10 +10,17 @@
     Address: {{ logged_in_employee.address }} {{logged_in_employee.zip_code }}<br />
     <br />
     <br />
+    <h3>{{ today }}</h3>
     Scheduled Weekly  Pickups: 
+
+    {% for customer in all_customers %}
+    <h3>{{ customer.name }}</h3> <br>
+
+    {% endfor %}
+    
     <br />
     <br />
-    One-time Pickup
+    One-time Pickup:
     <br />
     <br />
     Active Accounts:

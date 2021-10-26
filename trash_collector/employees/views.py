@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.apps import apps
+from django.apps import apps 
 from datetime import date
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Employee
+
 
 
 # Create your views here.
@@ -14,25 +15,33 @@ from .models import Employee
 
 @login_required
 def index(request):
-    Customer = apps.get_model('customers.Customer')
+    # This line will get the Customer model from the other app, it can now be used to query the db for Customers
+    Customers = apps.get_model('customers.Customer')
+    
     logged_in_user = request.user
     try:
         # This line will return the customer record of the logged-in user if one exists
         logged_in_employee = Employee.objects.get(user=logged_in_user)
+        
+        all_customers= Customers.objects.all()
 
         today = date.today()
         
+    
+        
         context = {
             'logged_in_employee': logged_in_employee,
+            'Customer': Customers,
+            'all_customers': all_customers,
             'today': today
         }
         return render(request, 'employees/index.html', context)
     except ObjectDoesNotExist:
         return HttpResponseRedirect(reverse('employees:create'))
-    # This line will get the Customer model from the other app, it can now be used to query the db for Customers
     
     
-    # return render(request, 'employees/index.html')
+    
+    
 
 
 
@@ -72,3 +81,12 @@ def edit_profile(request):
         }
         return render(request, 'employees/edit_profile.html', context)
         
+
+
+
+    
+
+    
+
+
+
