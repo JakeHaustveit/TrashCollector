@@ -38,6 +38,8 @@ def index(request):
             'customer_weekly_pickup': customer_weekly_pickup,            
                      
         }
+
+
         return render(request, 'employees/index.html', context)
     except ObjectDoesNotExist:
         return HttpResponseRedirect(reverse('employees:create'))
@@ -86,6 +88,8 @@ def edit_profile(request):
         
 
 
+
+    
 
     
 

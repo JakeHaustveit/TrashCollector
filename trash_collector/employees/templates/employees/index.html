@@ -7,7 +7,7 @@
 {% block content %}
   {% if user.is_authenticated %}
     Hello {{ logged_in_employee.name }}!<br />
-    Address: {{ logged_in_employee.address }} {{logged_in_employee.zip_code }}<br />
+    {{logged_in_employee.zip_code }}<br />
     <br />
     <br />
     <h3>{{ today }}</h3>
@@ -28,7 +28,7 @@
     
     <br />
     <br />
-    
+
     One-time Pickup:
     <br />
     {% for customer in customer_one_time_pickup %}
