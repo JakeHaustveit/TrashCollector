@@ -7,18 +7,20 @@
 {% block content %}
   {% if user.is_authenticated %}
     Hello {{ logged_in_employee.name }}!<br />
-    Address: {{ logged_in_employee.address }} {{logged_in_employee.zip_code }}<br />
+    {{logged_in_employee.zip_code }}<br />
     <br />
     <br />
     <h3>{{ today }}</h3>
     Scheduled Weekly  Pickups: 
 
     {% for customer in all_customers %}
-    <h3>{{ customer.name }}</h3> <br>
+      {% if customer.zip_code == logged_in_employee.zip_code %}
+        
 
+      {% endif %}
     {% endfor %}
     
-    {{ logged_in_employee_zip_code }}
+    
     <br />
     <br />
     One-time Pickup:

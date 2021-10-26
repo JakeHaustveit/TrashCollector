@@ -25,7 +25,8 @@ def index(request):
         
         
         all_customers= Customers.objects.all()
-        logged_in_employee_zip_code= Employee.objects.get(pk=logged_in_employee.zip_code)
+        pickup = all_customers.filter(zip_code = logged_in_employee.zip_code)
+        
 
         today = date.today()      
     
@@ -35,8 +36,11 @@ def index(request):
             'Customer': Customers,
             'all_customers': all_customers,
             'today': today,
-            'logged_in_employee_zip_code': logged_in_employee_zip_code            
+            'pickup': pickup 
+                      
         }
+
+
         return render(request, 'employees/index.html', context)
     except ObjectDoesNotExist:
         return HttpResponseRedirect(reverse('employees:create'))
@@ -85,6 +89,8 @@ def edit_profile(request):
         
 
 
+
+    
 
     
 
