@@ -13,7 +13,7 @@
     <h3>{{ today }}</h3>
     Scheduled Weekly  Pickups: 
 
-    {% for customer in all_customers %}
+    {% for {{customer.name}} in all_customers %}
       {% if customer.zip_code == logged_in_employee.zip_code %}
         
 
