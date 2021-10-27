@@ -28,7 +28,7 @@ def index(request):
         day_of_week= calendar.day_name[date_numbers.weekday()] 
       
         customer_matching_zip_code= all_customers.filter(zip_code= logged_in_employee.zip_code)
-        customer_active_account= customer_matching_zip_code.filter(Q(suspend_end__lte = date_numbers, suspend_start__gte= date_numbers) | Q(suspend_end__isnull=True, suspend_start__isnull=True));
+        customer_active_account= customer_matching_zip_code.filter(Q(suspend_end__lt = date_numbers, suspend_start__gt= date_numbers) | Q(suspend_end__isnull=True, suspend_start__isnull=True));
         
         customer_pickup_weekly_and_one_time= customer_active_account.filter(Q(one_time_pickup= date_numbers) | Q(weekly_pickup= day_of_week )) 
         
@@ -97,9 +97,19 @@ def edit_profile(request):
         return render(request, 'employees/edit_profile.html', context)
 
 
-@login_required
-def confirm_pickup(request):
-    pass        
+
+def confirm_pickup(request, customer_id): 
+    
+    
+    try:
+        Customer = apps.get_model('customers.Customer')   
+        customer_to_update = Customer.objects.get(id=customer_id)
+        customer_to_update.balance += 20
+        customer_to_update.date_of_last_pickup = date.today()
+        customer_to_update.save()
+        return  HttpResponseRedirect(reverse('employees:index'))
+    except ObjectDoesNotExist:        
+        return render(request,'employees/index.html')
         
 
 

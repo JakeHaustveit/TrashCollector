@@ -20,7 +20,7 @@
      Scheduled Pickups for today:
     <br /> 
     {% for customer in customer_ready_for_pickup %}
-     <h3> {{customer.name}} </h3>
+     <h3> {{customer.name}} </h3> <a href="{% url 'employees:confirm_pickup' customer.id %}"> Confirm Pickup</a>
 
     {% endfor %}  
     
