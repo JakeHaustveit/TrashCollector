@@ -26,13 +26,13 @@ def index(request):
         all_customers= Customers.objects.all()   
         date_numbers = date.today()
         day_of_week= calendar.day_name[date_numbers.weekday()] 
-        # start= 'suspend_start'
-        # end='suspend_end'
+      
         customer_matching_zip_code= all_customers.filter(zip_code= logged_in_employee.zip_code)
-        customer_active_account= customer_matching_zip_code.filter(Q(suspend_end__gte == date_numbers, suspend_start__lte== date_numbers) | Q(suspend_end__isnull==True, suspend_start__isnull==True));
+        customer_active_account= customer_matching_zip_code.filter(Q(suspend_end__lte = date_numbers, suspend_start__gte= date_numbers) | Q(suspend_end__isnull=True, suspend_start__isnull=True));
         
-        customer_one_time_pickup= customer_matching_zip_code.filter(one_time_pickup= date_numbers) 
-        customer_weekly_pickup= customer_matching_zip_code.filter(weekly_pickup= day_of_week )
+        customer_pickup_weekly_and_one_time= customer_active_account.filter(Q(one_time_pickup= date_numbers) | Q(weekly_pickup= day_of_week )) 
+        
+        customer_ready_for_pickup= customer_pickup_weekly_and_one_time.filter(Q(date_of_last_pickup__lt = date_numbers) |Q(date_of_last_pickup__isnull=True))
         
         context = {
             'logged_in_employee': logged_in_employee,
@@ -43,9 +43,10 @@ def index(request):
             # 'start': start,
             # 'end': end,
             'customer_matching_zip_code': customer_matching_zip_code,
-            'customer_one_time_pickup': customer_one_time_pickup,
-            'customer_weekly_pickup': customer_weekly_pickup,            
-            'customer_active_account': customer_active_account    
+            # 'customer_one_time_pickup': customer_one_time_pickup,
+            # 'customer_weekly_pickup': customer_weekly_pickup,            
+            'customer_active_account': customer_active_account,
+            'customer_ready_for_pickup': customer_ready_for_pickup    
         }
 
 
@@ -94,6 +95,11 @@ def edit_profile(request):
             'logged_in_employee': logged_in_employee
         }
         return render(request, 'employees/edit_profile.html', context)
+
+
+@login_required
+def confirm_pickup(request):
+    pass        
         
 
 
