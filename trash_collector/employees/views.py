@@ -2,11 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.apps import apps 
-from datetime import date
+from datetime import date 
+import calendar
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Employee
-
+from django.db.models import Q
 
 
 # Create your views here.
@@ -23,20 +24,28 @@ def index(request):
         # This line will return the customer record of the logged-in user if one exists
         logged_in_employee = Employee.objects.get(user=logged_in_user)
         all_customers= Customers.objects.all()   
-        today = date.today()
-        day_of_week= date.weekday  
-        customer_matching_zip_code= Customers.objects.filter(zip_code= logged_in_employee.zip_code)
-        customer_one_time_pickup= Customers.objects.filter(one_time_pickup= today) 
-        customer_weekly_pickup= Customers.objects.filter(weekly_pickup= day_of_week )     
+        date_numbers = date.today()
+        day_of_week= calendar.day_name[date_numbers.weekday()] 
+        # start= 'suspend_start'
+        # end='suspend_end'
+        customer_matching_zip_code= all_customers.filter(zip_code= logged_in_employee.zip_code)
+        customer_active_account= customer_matching_zip_code.filter(Q(suspend_end__gte == date_numbers, suspend_start__lte== date_numbers) | Q(suspend_end__isnull==True, suspend_start__isnull==True));
+        
+        customer_one_time_pickup= customer_matching_zip_code.filter(one_time_pickup= date_numbers) 
+        customer_weekly_pickup= customer_matching_zip_code.filter(weekly_pickup= day_of_week )
+        
         context = {
             'logged_in_employee': logged_in_employee,
             'Customer': Customers,
             'all_customers': all_customers,
-            'today': today,
+            'date_numbers': date_numbers,
+            'day_of_week': day_of_week,
+            # 'start': start,
+            # 'end': end,
             'customer_matching_zip_code': customer_matching_zip_code,
             'customer_one_time_pickup': customer_one_time_pickup,
             'customer_weekly_pickup': customer_weekly_pickup,            
-                     
+            'customer_active_account': customer_active_account    
         }
 
 

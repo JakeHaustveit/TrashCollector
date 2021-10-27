@@ -10,7 +10,8 @@
     {{logged_in_employee.zip_code }}<br />
     <br />
     <br />
-    <h3>{{ today }}</h3>
+    <h3>{{ date_numbers }}</h3>
+    <h3>{{ day_of_week }}</h3>
     Customers in my Zipcode    
 
     {% for customer in customer_matching_zip_code %}
@@ -19,7 +20,8 @@
     {% endfor %} 
 
 
-    Scheduled Weekly  Pickups: 
+    Scheduled Weekly  Pickups:
+    <br /> 
     {% for customer in customer_weekly_pickup %}
      <h3> {{customer.name}} </h3>
 
@@ -39,6 +41,10 @@
     <br />
     Active Accounts:
     <br />
+    {% for customer in customer_active_account %}
+    <h3> {{customer.name}} </h3>
+
+    {% endfor %} 
     <br />
   
 
