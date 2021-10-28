@@ -11,8 +11,8 @@
     <br />
     <br />
     <h3>Todays Date: {{ date_numbers }}</h3> 
-    <a href="{% url 'employees:choose_day' %}">Monday</a> 
-   
+    <a href="{% url 'employees:choose_day' 'monday' %}">Monday</a>  <a href="{% url 'employees:choose_day' 'tuesday' %}">Tuesday</a>  <a href="{% url 'employees:choose_day' 'wednesday' %}">Wednesday</a> <br/>
+    <a href="{% url 'employees:choose_day' 'thursday' %}">Thursday</a>  <a href="{% url 'employees:choose_day' 'friday' %}">Friday</a>  <a href="{% url 'employees:choose_day' 'saturday' %}">Saturday</a> 
     <br />
 
 

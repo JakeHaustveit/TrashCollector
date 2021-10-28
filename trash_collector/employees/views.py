@@ -35,8 +35,7 @@ def index(request):
         customer_pickup_weekly_and_one_time= customer_active_account.filter(Q(one_time_pickup= date_numbers) | Q(weekly_pickup= day_of_week )) 
         
         customer_ready_for_pickup= customer_pickup_weekly_and_one_time.filter(Q(date_of_last_pickup__lt = date_numbers) |Q(date_of_last_pickup__isnull=True))
-
-        # customer_on_monday= customer_matching_zip_code.filter(weekly_pickup= 'monday')
+        
         
         context = {
             'logged_in_employee': logged_in_employee,
@@ -115,36 +114,25 @@ def confirm_pickup(request, customer_id):
 
 
 @login_required   
-def choose_day(request):
+def choose_day(request, picked_day):
     logged_in_user = request.user
-    logged_in_employee = Employee.objects.get(user=logged_in_user)
-    
+    logged_in_employee = Employee.objects.get(user=logged_in_user)    
 #     customer_on_tuesday=  customer_matching_zip_code.filter(weekly_pickup= 'tuesday')
 #     customer_on_thursday=  customer_matching_zip_code.filter(weekly_pickup= 'wednesday')
 #     customer_on_friday=     customer_matching_zip_code.filter(weekly_pickup= 'friday')
 #     customer_on_saturday=   customer_matching_zip_code.filter(weekly_pickup= 'saturday')
-   
+    day_of_week= picked_day
     try:
         Customer = apps.get_model('customers.Customer')
         all_customers= Customer.objects.all() 
-        customer_matching_zip_code = all_customers.filter(zip_code=logged_in_employee)
-        customer_on_monday=   customer_matching_zip_code.filter(weekly_pickup= 'monday')
-#     if request.method == 'POST':
-#         my_date = request.POST.get('select date')
-#         for customer in Customer:
-#             if customer.weekly_pickup_day == my_date:
-    except ObjectDoesNotExist:        
-        return render(request,'employees/choose_day.html')
-                  
-            
-    else:
+        customer_matching_zip_code = all_customers.filter(zip_code=logged_in_employee.zip_code)
+        customer_on_monday=   customer_matching_zip_code.filter(weekly_pickup= day_of_week)
         context = {
             'logged_in_employee': logged_in_employee,
             'customer_matching_zip_code': customer_matching_zip_code,
             'customer_on_monday': customer_on_monday, 
-#             'customer_on_tuesday': customer_on_tuesday ,
-#             'customer_on_thursday': customer_on_thursday,
-#             'customer_on_friday': customer_on_friday,
-            # 'customer_on_saturday': customer_on_saturday,
         } 
-        return render(request, 'employees/index.html', context)
+        return render(request,'employees/choose_day.html',context)
+    except ObjectDoesNotExist:     
+       
+        return  HttpResponseRedirect(reverse('employees:index'))

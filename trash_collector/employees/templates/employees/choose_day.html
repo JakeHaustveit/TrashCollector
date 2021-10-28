@@ -1,1 +1,15 @@
+{% extends 'employees\employee_base.html' %}
 
+{% block title %} Employee Home {% endblock %}
+
+{% block header %} Scheduled Customers {% endblock %}
+
+{% block content %}
+
+{% for customer in customer_on_monday %}
+
+    <h3> {{customer.name}}</h3>
+
+{% endfor%}
+
+{% endblock %}
