@@ -18,21 +18,25 @@ from django.db.models import Q
 def index(request):
     # This line will get the Customer model from the other app, it can now be used to query the db for Customers
     Customers = apps.get_model('customers.Customer')
-    
     logged_in_user = request.user
+
     try:
         # This line will return the customer record of the logged-in user if one exists
         logged_in_employee = Employee.objects.get(user=logged_in_user)
         all_customers= Customers.objects.all()   
         date_numbers = date.today()
         day_of_week= calendar.day_name[date_numbers.weekday()] 
-      
+
+         
         customer_matching_zip_code= all_customers.filter(zip_code= logged_in_employee.zip_code)
+        
         customer_active_account= customer_matching_zip_code.filter(Q(suspend_end__lt = date_numbers, suspend_start__gt= date_numbers) | Q(suspend_end__isnull=True, suspend_start__isnull=True));
         
         customer_pickup_weekly_and_one_time= customer_active_account.filter(Q(one_time_pickup= date_numbers) | Q(weekly_pickup= day_of_week )) 
         
         customer_ready_for_pickup= customer_pickup_weekly_and_one_time.filter(Q(date_of_last_pickup__lt = date_numbers) |Q(date_of_last_pickup__isnull=True))
+
+        # customer_on_monday= customer_matching_zip_code.filter(weekly_pickup= 'monday')
         
         context = {
             'logged_in_employee': logged_in_employee,
@@ -40,13 +44,9 @@ def index(request):
             'all_customers': all_customers,
             'date_numbers': date_numbers,
             'day_of_week': day_of_week,
-            # 'start': start,
-            # 'end': end,
-            'customer_matching_zip_code': customer_matching_zip_code,
-            # 'customer_one_time_pickup': customer_one_time_pickup,
-            # 'customer_weekly_pickup': customer_weekly_pickup,            
+            'customer_matching_zip_code': customer_matching_zip_code,            
             'customer_active_account': customer_active_account,
-            'customer_ready_for_pickup': customer_ready_for_pickup    
+            'customer_ready_for_pickup': customer_ready_for_pickup,
         }
 
 
@@ -114,11 +114,37 @@ def confirm_pickup(request, customer_id):
 
 
 
+@login_required   
+def choose_day(request):
+    logged_in_user = request.user
+    logged_in_employee = Employee.objects.get(user=logged_in_user)
     
-
-    
-
-    
-
-
-
+#     customer_on_tuesday=  customer_matching_zip_code.filter(weekly_pickup= 'tuesday')
+#     customer_on_thursday=  customer_matching_zip_code.filter(weekly_pickup= 'wednesday')
+#     customer_on_friday=     customer_matching_zip_code.filter(weekly_pickup= 'friday')
+#     customer_on_saturday=   customer_matching_zip_code.filter(weekly_pickup= 'saturday')
+   
+    try:
+        Customer = apps.get_model('customers.Customer')
+        all_customers= Customer.objects.all() 
+        customer_matching_zip_code = all_customers.filter(zip_code=logged_in_employee)
+        customer_on_monday=   customer_matching_zip_code.filter(weekly_pickup= 'monday')
+#     if request.method == 'POST':
+#         my_date = request.POST.get('select date')
+#         for customer in Customer:
+#             if customer.weekly_pickup_day == my_date:
+    except ObjectDoesNotExist:        
+        return render(request,'employees/choose_day.html')
+                  
+            
+    else:
+        context = {
+            'logged_in_employee': logged_in_employee,
+            'customer_matching_zip_code': customer_matching_zip_code,
+            'customer_on_monday': customer_on_monday, 
+#             'customer_on_tuesday': customer_on_tuesday ,
+#             'customer_on_thursday': customer_on_thursday,
+#             'customer_on_friday': customer_on_friday,
+            # 'customer_on_saturday': customer_on_saturday,
+        } 
+        return render(request, 'employees/index.html', context)
