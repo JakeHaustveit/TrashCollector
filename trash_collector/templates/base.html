@@ -17,21 +17,24 @@
   </nav>
   {% endif %}
     <main>
-      <div class="container" style=background-color:darkgreen>>
+      <div class="container" style=background-color:springgreen>
         <div class="row">
-          <div class="col-2"></div>
+          <div class="col-2" style=background-color:darkgreen></div>
           <div class="col-8" align="center">
+            <br />
+            <br />
             <br />
             <br />
             <h1>{% block header %}{% endblock %}</h1>
             {% block content %}{% endblock %}
           </div>
-          <div class="col-2"></div>
+          <div class="col-2" style=background-color:darkgreen></div>
         </div>
       </div>
     </main>
     <div style=background-color:darkgreen>
     </div>
+    
 
   </body>
 </html>
