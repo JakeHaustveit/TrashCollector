@@ -6,21 +6,30 @@
 
 {% block content %}
   {% if user.is_authenticated %}
-    Hello {{ logged_in_employee.name }}!<br />
-    {{logged_in_employee.zip_code }}<br />
+  <br />
+  <br />
+  <br />
+
+   <h3> Hello {{ logged_in_employee.name }}!</h3>
+   <h4>Employee Zipcode: {{logged_in_employee.zip_code }}</h4><br />
     <br />
     <br />
-    <h3>Todays Date: {{ date_numbers }}</h3> 
-    <a href="{% url 'employees:choose_day' 'monday' %}">Monday</a>  <a href="{% url 'employees:choose_day' 'tuesday' %}">Tuesday</a>  <a href="{% url 'employees:choose_day' 'wednesday' %}">Wednesday</a> <br/>
-    <a href="{% url 'employees:choose_day' 'thursday' %}">Thursday</a>  <a href="{% url 'employees:choose_day' 'friday' %}">Friday</a>  <a href="{% url 'employees:choose_day' 'saturday' %}">Saturday</a> 
+    <h3>Todays Date: {{ date_numbers }}</h3>
     <br />
-
-
-
-     Scheduled Pickups for today:
-    <br /> 
+    <h3>Select Day To View Scheduled Customer Pickups</h3>
+    <div class="btn-group">
+    <button class="button" class="btn btn-primary"> <a href="{% url 'employees:choose_day' 'monday' %}"> Monday</a></button> 
+    <button class="button" class="btn btn-primary"> <a href="{% url 'employees:choose_day' 'tuesday' %}">Tuesday</a>  </button> 
+    <button class="button" class="btn btn-primary"> <a href="{% url 'employees:choose_day' 'wednesday' %}">Wednesday</a> </button> 
+    <button class="button" class="btn btn-primary"> <a href="{% url 'employees:choose_day' 'thursday' %}">Thursday</a> </button> 
+    <button class="button" class="btn btn-primary"> <a href="{% url 'employees:choose_day' 'friday' %}">Friday</a> </button> 
+    <button class="button" class="btn btn-primary"> <a href="{% url 'employees:choose_day' 'saturday' %}">Saturday</a> </button> 
+    </div>
+    <br />
+    <br />  
+    <h3>Scheduled Pickups for today:</h3>    
     {% for customer in customer_ready_for_pickup %}
-     <h3> {{customer.name}} </h3> <a href="{% url 'employees:confirm_pickup' customer.id %}"> Confirm Pickup</a>
+    <h3> {{customer.name}} </h3> <button class="button" class="btn btn-primary"> <a href="{% url 'employees:confirm_pickup' customer.id %}"> Confirm Pickup</a></button>
 
     {% endfor %}  
     

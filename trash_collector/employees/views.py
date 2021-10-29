@@ -131,6 +131,7 @@ def choose_day(request, picked_day):
             'logged_in_employee': logged_in_employee,
             'customer_matching_zip_code': customer_matching_zip_code,
             'customer_on_monday': customer_on_monday, 
+            'day_of_week': day_of_week
         } 
         return render(request,'employees/choose_day.html',context)
     except ObjectDoesNotExist:     

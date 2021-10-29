@@ -6,11 +6,13 @@
 
 {% block content %}
 <br />
+<div class="form-group">
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Log In</button>
   </form>
   <br />
-  <p>No account? <a href='{% url "accounts:register" %}'>Register instead</a></p>
+  <p>No account?  <button class="button" class="btn btn-primary"><a href='{% url "accounts:register" %}'> Register instead</a></button> </p>
+  <br/>
 {% endblock %}
